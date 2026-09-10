@@ -1,35 +1,515 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ArrowUpRight, CheckCircle2, ChevronDown, Clock3, Mail, MapPin, Moon, Phone, Send, Sun } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  CheckCircle2,
+  ChevronDown,
+  Clock3,
+  Mail,
+  MapPin,
+  Moon,
+  Phone,
+  Send,
+  Sun,
+} from 'lucide-react';
 import { company } from '@/data/company';
 import styles from '../contact-premium.module.css';
+import TiltCard from '../components/TiltCard';
+import BackToTop from '../components/BackToTop';
 
-const help = ['Request Quote', 'Project Inquiry', '3D Modeling', 'Shop Drawings', 'Erection Drawings', 'General Inquiry', 'Partnership'];
-const faqs = [['How do I request a quote?', 'Choose Request a Quote and email the team with your project scope, relevant drawings, and the detailing services you need.'], ['What can I include in a project inquiry?', 'Include the project type, available contract information, scope requirements, and any important coordination notes.'], ['Which services can I ask about?', 'You can enquire about 3D modeling, shop drawings, erection drawings, CNC/DXF/DSTV files, material documentation, and other listed detailing outputs.'], ['How can I contact the team?', 'Use the email link on this page. It opens your configured email application so you can send an enquiry directly.']];
-const emailLink = `mailto:${company.contact.email}?subject=${encodeURIComponent('MV Designers | Project Enquiry')}&body=${encodeURIComponent('Hello MV Designers team,\n\nI would like to discuss the following structural steel detailing requirement:\n\nProject / scope:\nRequired service(s):\nTimeline / additional notes:\n\nName:\nCompany:\nPhone:\n')}`;
+const help = [
+  'Request Quote',
+  'Project Inquiry',
+  '3D Modeling',
+  'Shop Drawings',
+  'Erection Drawings',
+  'General Inquiry',
+  'Partnership',
+];
+
+const faqs = [
+  [
+    'How do I request a quote?',
+    'Choose Request a Quote and email the team with your project scope, relevant drawings, and the detailing services you need.',
+  ],
+  [
+    'What can I include in a project inquiry?',
+    'Include the project type, available contract information, scope requirements, and any important coordination notes.',
+  ],
+  [
+    'Which services can I ask about?',
+    'You can enquire about 3D modeling, shop drawings, erection drawings, CNC/DXF/DSTV files, material documentation, and other listed detailing outputs.',
+  ],
+  [
+    'How can I contact the team?',
+    'Use the email link on this page. It opens your configured email application so you can send an enquiry directly.',
+  ],
+];
+
+const emailLink = `mailto:${company.contact.email}?subject=${encodeURIComponent(
+  'MV Designers | Project Enquiry'
+)}&body=${encodeURIComponent(
+  'Hello MV Designers team,\n\nI would like to discuss the following structural steel detailing requirement:\n\nProject / scope:\nRequired service(s):\nTimeline / additional notes:\n\nName:\nCompany:\nPhone:\n'
+)}`;
+
 const isPublished = (value: string) => Boolean(value) && !value.toLowerCase().includes('add verified');
 
 export default function ContactPage() {
-  const [clocks, setClocks] = useState({ us: '—', india: '—' }); const [open, setOpen] = useState(0); const [light, setLight] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', service: 'Project Inquiry', message: '' }); const [formState, setFormState] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
-  useEffect(() => { const saved = localStorage.getItem('mv-theme'); const isLight = saved ? saved === 'light' : matchMedia('(prefers-color-scheme: light)').matches; setLight(isLight); document.documentElement.dataset.theme = isLight ? 'light' : 'dark'; const tick = () => setClocks({ us: new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true }).format(new Date()), india: new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: '2-digit', hour12: true }).format(new Date()) }); tick(); const timer = setInterval(tick, 60000); return () => clearInterval(timer); }, []);
-  const toggleTheme = () => { const next = !light; setLight(next); localStorage.setItem('mv-theme', next ? 'light' : 'dark'); document.documentElement.dataset.theme = next ? 'light' : 'dark'; };
-  const submitContact = async (event: React.FormEvent<HTMLFormElement>) => { event.preventDefault(); setFormState('sending'); try { const response = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) }); if (!response.ok) throw new Error('Unable to send'); setFormState('success'); } catch { setFormState('error'); } };
-  const phonePublished = isPublished(company.contact.phone); const locationPublished = isPublished(company.contact.location);
-  return <main className={`contact-page ${styles.page}`}>
-    <button className="contact-theme-toggle icon" onClick={toggleTheme} aria-label="Change color theme">{light ? <Moon size={18}/> : <Sun size={18}/>}</button>
-    <section className={`contact-hero ${styles.hero}`}><div className="contact-grid"/><div className="contact-beam"><i/><i/><i/></div><p className="eyebrow">MV DESIGNERS / CONTACT</p><h1>Let’s talk about<br/><em>your next project.</em></h1><p>Start a considered conversation about your structural steel detailing requirements, project information, and next steps.</p><a className="button" href={emailLink}>Request a Quote <ArrowUpRight size={17}/></a></section>
-    <section className={`contact-intro ${styles.intro}`}><div><p className="eyebrow">DIRECT CONNECTION</p><h2>Clear communication,<br/><em>from the first note.</em></h2></div><p>Use the contact route that works best for you. All project enquiries are handled directly through your preferred email application.</p></section>
-    <section className={styles.visuals} aria-label="Structural engineering details"><figure><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1100&q=78" alt="Construction framework detail" loading="lazy"/><figcaption>PROJECT COORDINATION / DETAIL</figcaption></figure><figure><img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1100&q=78" alt="Construction structure in progress" loading="lazy"/><figcaption>STRUCTURAL WORKFLOW / FIELD VIEW</figcaption></figure></section>
-    <section className={`contact-details ${styles.cards}`}><a className="contact-card" href={emailLink}><Mail/><small>EMAIL</small><strong>{company.contact.email}</strong><span>Email our team <ArrowUpRight size={15}/></span></a>{phonePublished ? <a className="contact-card" href={`tel:${company.contact.phone.replace(/\s/g, '')}`}><Phone/><small>PHONE</small><strong>{company.contact.phone}</strong><span>Call our team <ArrowUpRight size={15}/></span></a> : <div className="contact-card unavailable"><Phone/><small>PHONE</small><strong>Available on request</strong><span>Phone details are not published</span></div>}{locationPublished ? <a className="contact-card" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.contact.location)}`} target="_blank" rel="noreferrer"><MapPin/><small>LOCATION</small><strong>{company.contact.location}</strong><span>View on Google Maps <ArrowUpRight size={15}/></span></a> : <div className="contact-card unavailable"><MapPin/><small>LOCATION</small><strong>Available on request</strong><span>Location details are not published</span></div>}<div className="contact-card unavailable"><Clock3/><small>BUSINESS HOURS</small><strong>Contact the team</strong><span>Working hours are not published</span></div></section>
-    <section className={`contact-form-section ${styles.formSection}`}><div><p className="eyebrow">PROJECT ENQUIRY</p><h2>Bring the details.<br/><em>We’ll bring clarity.</em></h2><p>Share a few essentials and the team can begin with the right context. You can still use the email route above for drawings and attachments.</p><div className="form-note"><CheckCircle2 size={17}/><span>Your details stay within the MV Designers enquiry workflow.</span></div></div><form className="contact-form" onSubmit={submitContact}>{formState === 'success' ? <div className="form-success"><CheckCircle2 size={26}/><strong>Request received.</strong><span>The MV Designers team will review your enquiry and respond with next steps.</span><button type="button" className="text-link" onClick={() => { setForm({ name: '', email: '', service: 'Project Inquiry', message: '' }); setFormState('idle'); }}>Send another enquiry <ArrowUpRight size={16}/></button></div> : <><label>NAME<input required value={form.name} onChange={event => setForm({ ...form, name: event.target.value })} placeholder="Your name" /></label><label>BUSINESS EMAIL<input required type="email" value={form.email} onChange={event => setForm({ ...form, email: event.target.value })} placeholder="you@company.com" /></label><label>SERVICE<select value={form.service} onChange={event => setForm({ ...form, service: event.target.value })}><option>Project Inquiry</option><option>3D Modeling</option><option>Shop Drawings</option><option>Erection Drawings</option><option>CNC / DSTV Files</option></select></label><label className="wide">MESSAGE<textarea required value={form.message} onChange={event => setForm({ ...form, message: event.target.value })} placeholder="Tell us about your project scope, drawings, or timeline" /></label>{formState === 'error' && <p className="form-error">Please check your details and try again, or use the email link above.</p>}<button className="button" type="submit" disabled={formState === 'sending'}>{formState === 'sending' ? 'Sending…' : 'Send Enquiry'} <Send size={16}/></button></>}</form></section>
-    <section className={`contact-help ${styles.centeredSection}`}><div className="help-sticky"><p className="eyebrow">HOW CAN WE HELP?</p><h2>Choose the right<br/><em>starting point.</em></h2><p>Each enquiry opens a tailored email so you can provide the useful project context upfront.</p></div><div className="help-list">{help.map((item, i) => <a key={item} href={`mailto:${company.contact.email}?subject=${encodeURIComponent('MV Designers | ' + item)}&body=${encodeURIComponent('Hello MV Designers team,\n\nI am contacting you about: ' + item + '\n\nProject details:\n')}`}><b>{String(i + 1).padStart(2, '0')}</b><span>{item}</span><ArrowUpRight size={18}/></a>)}</div></section>
-    <section className={`next ${styles.next}`}><p className="eyebrow">WHAT HAPPENS NEXT?</p><div>{[['01','Send Request'],['02','We Review'],['03','We Connect'],['04','Move Forward']].map(([num, label], i) => <article key={label}><b>{num}</b><i>{i < 3 ? '→' : '✓'}</i><h3>{label}</h3><p>{i === 0 ? 'Share your project context by email.' : i === 1 ? 'The team reviews the information provided.' : i === 2 ? 'A project conversation can begin.' : 'Align on the appropriate next step.'}</p></article>)}</div></section>
-    <section className={`time-zone ${styles.time}`}><div><p className="eyebrow">US ↔ INDIA</p><h2>Connected across<br/><em>working worlds.</em></h2><p>Live time displays help you understand the current time in US Eastern Time and India Standard Time. Confirm business hours directly with the team.</p></div><div className="clock-glass"><article><span>UNITED STATES</span><b>Eastern Time</b><strong>{clocks.us}</strong><small>America / New York</small></article><i>↔</i><article><span>INDIA</span><b>India Standard Time</b><strong>{clocks.india}</strong><small>Asia / Kolkata</small></article></div></section>
-    <section className={`prefer ${styles.prefer}`}><Mail/><div><p className="eyebrow">PREFER EMAIL?</p><h2>Write to our team.</h2><p>Open your mail app with a professional enquiry template ready to complete.</p></div><a className="text-link" href={emailLink}>Email Our Team <ArrowUpRight size={17}/></a></section>
-    <section className={`contact-faq ${styles.faq}`}><p className="eyebrow">FREQUENTLY ASKED QUESTIONS</p><h2>Helpful before<br/><em>you reach out.</em></h2><div>{faqs.map(([question, answer], i) => <article className={open === i ? 'active' : ''} key={question}><button onClick={() => setOpen(open === i ? -1 : i)} aria-expanded={open === i}><span>{question}</span><ChevronDown/></button>{open === i && <p>{answer}</p>}</article>)}</div></section>
-    <section className={`contact-final ${styles.final}`}><p className="eyebrow">MV DESIGNERS / PROJECT ENQUIRY</p><h2>Have a project<br/><em>in mind?</em></h2><p>Bring clarity and confidence to your next structural steel project.</p><div><a className="button" href={emailLink}>Request a Quote <ArrowUpRight size={17}/></a><a className="text-link" href={emailLink}>Email Our Team <ArrowUpRight size={17}/></a></div></section>
-    <footer><a className="brand" href="/"><small>STRUCTURAL</small>MV DESIGNERS</a><p>{company.tagline}</p><div><a href="/privacy">Privacy Policy</a><a href="#">Terms</a><a href="#">Accessibility</a></div><small>STRUCTURAL DETAILING • DIGITAL PRECISION • GLOBAL COLLABORATION<br/>© {new Date().getFullYear()} MV Designers. All Rights Reserved.</small></footer>
-  </main>;
+  const [clocks, setClocks] = useState({ us: '—', india: '—' });
+  const [open, setOpen] = useState(0);
+  const [light, setLight] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', service: 'Project Inquiry', message: '' });
+  const [formState, setFormState] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('mv-theme');
+    const isLight = saved ? saved === 'light' : matchMedia('(prefers-color-scheme: light)').matches;
+    setLight(isLight);
+    document.documentElement.dataset.theme = isLight ? 'light' : 'dark';
+
+    const tick = () =>
+      setClocks({
+        us: new Intl.DateTimeFormat('en-US', {
+          timeZone: 'America/New_York',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+        }).format(new Date()),
+        india: new Intl.DateTimeFormat('en-US', {
+          timeZone: 'Asia/Kolkata',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+        }).format(new Date()),
+      });
+    tick();
+    const timer = setInterval(tick, 60000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !light;
+    setLight(next);
+    localStorage.setItem('mv-theme', next ? 'light' : 'dark');
+    document.documentElement.dataset.theme = next ? 'light' : 'dark';
+  };
+
+  const submitContact = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFormState('sending');
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!response.ok) throw new Error('Unable to send');
+      setFormState('success');
+    } catch {
+      setFormState('error');
+    }
+  };
+
+  const phonePublished = isPublished(company.contact.phone);
+  const locationPublished = isPublished(company.contact.location);
+
+  return (
+    <main className={`contact-page ${styles.page}`}>
+      <div style={{ position: 'fixed', top: '22px', left: '5vw', zIndex: 30 }}>
+        <a
+          href="/"
+          className="text-link"
+          style={{
+            background: 'rgba(7, 21, 37, 0.7)',
+            backdropFilter: 'blur(10px)',
+            padding: '8px 14px',
+            border: '1px solid var(--line)',
+            borderRadius: '4px',
+          }}
+        >
+          <ArrowLeft size={14} /> Back to Home
+        </a>
+      </div>
+
+      <button
+        className="contact-theme-toggle icon"
+        onClick={toggleTheme}
+        aria-label="Change color theme"
+        type="button"
+      >
+        {light ? <Moon size={18} /> : <Sun size={18} />}
+      </button>
+
+      <section className={`contact-hero ${styles.hero}`}>
+        <div className="contact-grid" />
+        <div className="contact-beam">
+          <i />
+          <i />
+          <i />
+        </div>
+        <p className="eyebrow">MV DESIGNERS / CONTACT</p>
+        <h1>
+          Let’s talk about
+          <br />
+          <em>your next project.</em>
+        </h1>
+        <p>
+          Start a considered conversation about your structural steel detailing requirements, project
+          information, and next steps.
+        </p>
+        <a className="button" href={emailLink}>
+          Request a Quote <ArrowUpRight size={17} />
+        </a>
+      </section>
+
+      <section className={`contact-intro ${styles.intro}`}>
+        <div>
+          <p className="eyebrow">DIRECT CONNECTION</p>
+          <h2>
+            Clear communication,
+            <br />
+            <em>from the first note.</em>
+          </h2>
+        </div>
+        <p>
+          Use the contact route that works best for you. All project enquiries are handled directly through your
+          preferred email application.
+        </p>
+      </section>
+
+      <section className={styles.visuals} aria-label="Structural engineering details">
+        <figure>
+          <img
+            src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1100&q=78"
+            alt="Construction framework detail"
+            loading="lazy"
+          />
+          <figcaption>PROJECT COORDINATION / DETAIL</figcaption>
+        </figure>
+        <figure>
+          <img
+            src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1100&q=78"
+            alt="Construction structure in progress"
+            loading="lazy"
+          />
+          <figcaption>STRUCTURAL WORKFLOW / FIELD VIEW</figcaption>
+        </figure>
+      </section>
+
+      <section className={`contact-details ${styles.cards}`}>
+        <TiltCard as="a" className="contact-card" href={emailLink} maxTilt={5}>
+          <Mail />
+          <small>EMAIL</small>
+          <strong>{company.contact.email}</strong>
+          <span>
+            Email our team <ArrowUpRight size={15} />
+          </span>
+        </TiltCard>
+
+        {phonePublished ? (
+          <TiltCard
+            as="a"
+            className="contact-card"
+            href={`tel:${company.contact.phone.replace(/\s/g, '')}`}
+            maxTilt={5}
+          >
+            <Phone />
+            <small>PHONE</small>
+            <strong>{company.contact.phone}</strong>
+            <span>
+              Call our team <ArrowUpRight size={15} />
+            </span>
+          </TiltCard>
+        ) : (
+          <div className="contact-card unavailable">
+            <Phone />
+            <small>PHONE</small>
+            <strong>Available on request</strong>
+            <span>Phone details are not published</span>
+          </div>
+        )}
+
+        {locationPublished ? (
+          <TiltCard
+            as="a"
+            className="contact-card"
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.contact.location)}`}
+            target="_blank"
+            rel="noreferrer"
+            maxTilt={5}
+          >
+            <MapPin />
+            <small>LOCATION</small>
+            <strong>{company.contact.location}</strong>
+            <span>
+              View on Google Maps <ArrowUpRight size={15} />
+            </span>
+          </TiltCard>
+        ) : (
+          <div className="contact-card unavailable">
+            <MapPin />
+            <small>LOCATION</small>
+            <strong>Available on request</strong>
+            <span>Location details are not published</span>
+          </div>
+        )}
+
+        <div className="contact-card unavailable">
+          <Clock3 />
+          <small>BUSINESS HOURS</small>
+          <strong>Contact the team</strong>
+          <span>Working hours are not published</span>
+        </div>
+      </section>
+
+      <section className={`contact-form-section ${styles.formSection}`}>
+        <div>
+          <p className="eyebrow">PROJECT ENQUIRY</p>
+          <h2>
+            Bring the details.
+            <br />
+            <em>We’ll bring clarity.</em>
+          </h2>
+          <p>
+            Share a few essentials and the team can begin with the right context. You can still use the email route
+            above for drawings and attachments.
+          </p>
+          <div className="form-note">
+            <CheckCircle2 size={17} />
+            <span>Your details stay within the MV Designers enquiry workflow.</span>
+          </div>
+        </div>
+
+        <form className="contact-form" onSubmit={submitContact}>
+          {formState === 'success' ? (
+            <div className="form-success">
+              <CheckCircle2 size={26} />
+              <strong>Request received.</strong>
+              <span>The MV Designers team will review your enquiry and respond with next steps.</span>
+              <button
+                type="button"
+                className="text-link"
+                onClick={() => {
+                  setForm({ name: '', email: '', service: 'Project Inquiry', message: '' });
+                  setFormState('idle');
+                }}
+              >
+                Send another enquiry <ArrowUpRight size={16} />
+              </button>
+            </div>
+          ) : (
+            <>
+              <label>
+                NAME
+                <input
+                  required
+                  value={form.name}
+                  onChange={(event) => setForm({ ...form, name: event.target.value })}
+                  placeholder="Your name"
+                />
+              </label>
+              <label>
+                BUSINESS EMAIL
+                <input
+                  required
+                  type="email"
+                  value={form.email}
+                  onChange={(event) => setForm({ ...form, email: event.target.value })}
+                  placeholder="you@company.com"
+                />
+              </label>
+              <label>
+                SERVICE
+                <select
+                  value={form.service}
+                  onChange={(event) => setForm({ ...form, service: event.target.value })}
+                >
+                  <option>Project Inquiry</option>
+                  <option>3D Modeling</option>
+                  <option>Shop Drawings</option>
+                  <option>Erection Drawings</option>
+                  <option>CNC / DSTV Files</option>
+                </select>
+              </label>
+              <label className="wide">
+                MESSAGE
+                <textarea
+                  required
+                  value={form.message}
+                  onChange={(event) => setForm({ ...form, message: event.target.value })}
+                  placeholder="Tell us about your project scope, drawings, or timeline"
+                />
+              </label>
+              {formState === 'error' && (
+                <p className="form-error">Please check your details and try again, or use the email link above.</p>
+              )}
+              <button className="button" type="submit" disabled={formState === 'sending'}>
+                {formState === 'sending' ? 'Sending…' : 'Send Enquiry'} <Send size={16} />
+              </button>
+            </>
+          )}
+        </form>
+      </section>
+
+      <section className={`contact-help ${styles.centeredSection}`}>
+        <div className="help-sticky">
+          <p className="eyebrow">HOW CAN WE HELP?</p>
+          <h2>
+            Choose the right
+            <br />
+            <em>starting point.</em>
+          </h2>
+          <p>Each enquiry opens a tailored email so you can provide the useful project context upfront.</p>
+        </div>
+        <div className="help-list">
+          {help.map((item, i) => (
+            <a
+              key={item}
+              href={`mailto:${company.contact.email}?subject=${encodeURIComponent(
+                'MV Designers | ' + item
+              )}&body=${encodeURIComponent(
+                'Hello MV Designers team,\n\nI am contacting you about: ' + item + '\n\nProject details:\n'
+              )}`}
+            >
+              <b>{String(i + 1).padStart(2, '0')}</b>
+              <span>{item}</span>
+              <ArrowUpRight size={18} />
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className={`next ${styles.next}`}>
+        <p className="eyebrow">WHAT HAPPENS NEXT?</p>
+        <div>
+          {[
+            ['01', 'Send Request'],
+            ['02', 'We Review'],
+            ['03', 'We Connect'],
+            ['04', 'Move Forward'],
+          ].map(([num, label], i) => (
+            <article key={label}>
+              <b>{num}</b>
+              <i>{i < 3 ? '→' : '✓'}</i>
+              <h3>{label}</h3>
+              <p>
+                {i === 0
+                  ? 'Share your project context by email.'
+                  : i === 1
+                  ? 'The team reviews the information provided.'
+                  : i === 2
+                  ? 'A project conversation can begin.'
+                  : 'Align on the appropriate next step.'}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className={`time-zone ${styles.time}`}>
+        <div>
+          <p className="eyebrow">US ↔ INDIA</p>
+          <h2>
+            Connected across
+            <br />
+            <em>working worlds.</em>
+          </h2>
+          <p>
+            Live time displays help you understand the current time in US Eastern Time and India Standard Time. Confirm
+            business hours directly with the team.
+          </p>
+        </div>
+        <TiltCard className="clock-glass" maxTilt={4}>
+          <article>
+            <span>UNITED STATES</span>
+            <b>Eastern Time</b>
+            <strong>{clocks.us}</strong>
+            <small>America / New York</small>
+          </article>
+          <i>↔</i>
+          <article>
+            <span>INDIA</span>
+            <b>India Standard Time</b>
+            <strong>{clocks.india}</strong>
+            <small>Asia / Kolkata</small>
+          </article>
+        </TiltCard>
+      </section>
+
+      <section className={`prefer ${styles.prefer}`}>
+        <Mail />
+        <div>
+          <p className="eyebrow">PREFER EMAIL?</p>
+          <h2>Write to our team.</h2>
+          <p>Open your mail app with a professional enquiry template ready to complete.</p>
+        </div>
+        <a className="text-link" href={emailLink}>
+          Email Our Team <ArrowUpRight size={17} />
+        </a>
+      </section>
+
+      <section className={`contact-faq ${styles.faq}`}>
+        <p className="eyebrow">FREQUENTLY ASKED QUESTIONS</p>
+        <h2>
+          Helpful before
+          <br />
+          <em>you reach out.</em>
+        </h2>
+        <div>
+          {faqs.map(([question, answer], i) => (
+            <article className={open === i ? 'active' : ''} key={question}>
+              <button
+                onClick={() => setOpen(open === i ? -1 : i)}
+                aria-expanded={open === i}
+                type="button"
+              >
+                <span>{question}</span>
+                <ChevronDown />
+              </button>
+              {open === i && <p>{answer}</p>}
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className={`contact-final ${styles.final}`}>
+        <p className="eyebrow">MV DESIGNERS / PROJECT ENQUIRY</p>
+        <h2>
+          Have a project
+          <br />
+          <em>in mind?</em>
+        </h2>
+        <p>Bring clarity and confidence to your next structural steel project.</p>
+        <div>
+          <a className="button" href={emailLink}>
+            Request a Quote <ArrowUpRight size={17} />
+          </a>
+          <a className="text-link" href={emailLink}>
+            Email Our Team <ArrowUpRight size={17} />
+          </a>
+        </div>
+      </section>
+
+      <footer>
+        <a className="brand" href="/">
+          <small>STRUCTURAL</small>
+          MV DESIGNERS
+        </a>
+        <p>{company.tagline}</p>
+        <div>
+          <a href="/privacy">Privacy Policy</a>
+          <a href="#">Terms</a>
+          <a href="#">Accessibility</a>
+        </div>
+        <small>
+          STRUCTURAL DETAILING • DIGITAL PRECISION • GLOBAL COLLABORATION
+          <br />© {new Date().getFullYear()} MV Designers. All Rights Reserved.
+        </small>
+      </footer>
+
+      <BackToTop />
+    </main>
+  );
 }
