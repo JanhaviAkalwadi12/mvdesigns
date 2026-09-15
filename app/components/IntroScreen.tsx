@@ -110,7 +110,6 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
-        // Move
         p.x += p.vx;
         p.y += p.vy;
         p.z += p.vz;
@@ -122,7 +121,6 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
         if (p.z < -400) p.z = 400;
         if (p.z > 400) p.z = -400;
 
-        // Rotate in 3D
         const rx = p.x * cosA - p.z * sinA;
         const rz = p.z * cosA + p.x * sinA + 600;
 
@@ -133,7 +131,6 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
 
           projected.push({ x: x2d, y: y2d, z: rz, color: p.color });
 
-          // Draw node
           const radius = Math.max(1, (1 - rz / 1200) * 2.8);
           ctx.beginPath();
           ctx.arc(x2d, y2d, radius, 0, Math.PI * 2);
@@ -143,7 +140,6 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
         }
       }
 
-      // Draw structural connection lines between nearby nodes
       ctx.lineWidth = 0.75;
       for (let i = 0; i < projected.length; i++) {
         for (let j = i + 1; j < projected.length; j++) {
@@ -185,11 +181,22 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
         <div className="intro-badge">
           <i /> DIGITAL TWIN PLATFORM
         </div>
-        <div className="intro-mark">
-          <strong>MV</strong>
-          <span>◇</span>
+        <div className="intro-mark" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <img
+            src="/assets/mv-desgins-logo.png"
+            alt="MV DESGINS"
+            style={{
+              height: '84px',
+              width: 'auto',
+              maxWidth: '280px',
+              objectFit: 'contain',
+              filter: 'drop-shadow(0 4px 25px rgba(200, 169, 107, 0.45))',
+            }}
+          />
         </div>
-        <h2 className="intro-title">Structural Detailing System</h2>
+        <h2 className="intro-title" style={{ fontSize: '13px', letterSpacing: '0.22em' }}>
+          Structural Detailing System
+        </h2>
         <div className="intro-telemetry" aria-live="polite">
           <span>&gt;</span> {telemetry}
         </div>

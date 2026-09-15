@@ -8,8 +8,10 @@ import {
   ChevronRight,
   Copy,
   Mail,
+  MapPin,
   Menu,
   Moon,
+  Phone,
   Send,
   ShieldCheck,
   Sun,
@@ -17,7 +19,7 @@ import {
   Maximize2,
 } from 'lucide-react';
 import { company } from '@/data/company';
-import { services } from '@/data/services';
+import { services, servicesIntro, recentProjects, sampleDrawings } from '@/data/services';
 import galleryStyles from './gallery.module.css';
 
 import IntroScreen from './components/IntroScreen';
@@ -32,6 +34,7 @@ const nav = [
   ['Services', '#services'],
   ['Process', '#process'],
   ['Capabilities', '#capabilities'],
+  ['Projects', '#projects'],
   ['Gallery', '#gallery'],
   ['Why MV', '#why-mv'],
   ['Contact', '#contact'],
@@ -68,6 +71,8 @@ export default function Home() {
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [galleryPaused, setGalleryPaused] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImages, setLightboxImages] = useState(galleryImages);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -110,7 +115,7 @@ export default function Home() {
 
   // Active section scrollspy observer
   useEffect(() => {
-    const sections = ['about', 'services', 'process', 'capabilities', 'gallery', 'why-mv', 'contact'];
+    const sections = ['about', 'services', 'process', 'capabilities', 'projects', 'gallery', 'why-mv', 'contact'];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -152,6 +157,12 @@ export default function Home() {
     setGalleryIndex((index + galleryImages.length) % galleryImages.length);
   };
 
+  const openLightboxWithImages = (images: Array<{ src: string; alt: string }>, idx: number) => {
+    setLightboxImages(images);
+    setLightboxIndex(idx);
+    setLightboxOpen(true);
+  };
+
   const copyEmail = () => {
     navigator.clipboard.writeText(company.contact.email);
     setCopied(true);
@@ -167,9 +178,14 @@ export default function Home() {
 
       {/* Sticky Header */}
       <header className={scrolled ? 'scrolled' : ''}>
-        <a className="brand" href="#home">
-          <small>STRUCTURAL</small>
-          MV DESIGNERS
+        <a className="brand" href="#home" aria-label="MV DESGINS Home">
+          <div className="brand-wrap">
+            <img
+              src="/assets/mv-desgins-logo.png"
+              alt="MV DESGINS"
+              className="brand-logo-img"
+            />
+          </div>
         </a>
 
         <nav className={menu ? 'open' : ''}>
@@ -216,7 +232,7 @@ export default function Home() {
             <em>Confidence</em> in Every Structure.
           </h1>
           <p>
-            MV Designers delivers accurate, fabrication-ready structural steel detailing solutions for
+            {company.name} delivers accurate, fabrication-ready structural steel detailing solutions for
             fabricators, engineers, and construction professionals.
           </p>
           <div className="hero-ctas">
@@ -228,7 +244,7 @@ export default function Home() {
             </a>
           </div>
           <p className="trust">
-            <Check size={14} /> Precision-led detailing for complex structural steel requirements.
+            <Check size={14} /> {company.tagline} — Detailing knowledge, experience &amp; international standards (AISC, NISD).
           </p>
         </div>
 
@@ -257,13 +273,13 @@ export default function Home() {
       {/* Marquee Banner */}
       <div className="marquee" aria-hidden="true">
         <div>
-          STRUCTURAL STEEL DETAILING <b>◆</b> 3D MODELING <b>◆</b> AUTOCAD <b>◆</b> REVIT <b>◆</b> NAVISWORKS <b>◆</b> SHOP DRAWINGS <b>◆</b> ERECTION DRAWINGS <b>◆</b> CNC / DSTV <b>◆</b> PRECISION <b>◆</b> QUALITY <b>◆</b> INNOVATION <b>◆</b>
+          STRUCTURAL STEEL DETAILING <b>◆</b> 3D MODELING <b>◆</b> SHOP DRAWINGS <b>◆</b> ERECTION DRAWINGS <b>◆</b> CNC / DSTV <b>◆</b> AISC &amp; NISD STANDARDS <b>◆</b> ADVANCED BOM <b>◆</b> KISS FILES <b>◆</b> EJE FILES <b>◆</b> PRECISION <b>◆</b> QUALITY <b>◆</b> YOU BUILD, WE HELP <b>◆</b>
         </div>
       </div>
 
       {/* 01 / About Section */}
       <section className="about section" id="about">
-        <aside>01 / ABOUT MV DESIGNERS</aside>
+        <aside>01 / ABOUT MV DESGINS</aside>
         <div>
           <p className="eyebrow">ENGINEERING, DELIVERED WITH PURPOSE</p>
           <h2>
@@ -273,10 +289,8 @@ export default function Home() {
           </h2>
         </div>
         <div className="bodycopy">
-          <p>
-            {company.description} We focus on the accuracy and innovation needed to turn complex design
-            information into concise, easy-to-read deliverables.
-          </p>
+          <p>{company.description}</p>
+          <p style={{ marginTop: '16px' }}>{company.extendedAbout}</p>
 
           <div className="about-metrics">
             <div className="metric-card">
@@ -285,7 +299,7 @@ export default function Home() {
             </div>
             <div className="metric-card">
               <strong>24/7</strong>
-              <span>Global Delivery Cycle</span>
+              <span>Global Project Cycle</span>
             </div>
             <div className="metric-card">
               <strong>AISC</strong>
@@ -300,7 +314,7 @@ export default function Home() {
           </div>
 
           <a className="text-link" href="#services">
-            Discover our approach <ArrowUpRight size={16} />
+            Discover our services <ArrowUpRight size={16} />
           </a>
         </div>
       </section>
@@ -321,7 +335,7 @@ export default function Home() {
             <br />
             <em>the work forward.</em>
           </h2>
-          <p>Each output is designed to support a clear, coordinated path from model to fabrication.</p>
+          <p>{servicesIntro}</p>
         </div>
 
         <div className="service-panel">
@@ -348,7 +362,7 @@ export default function Home() {
               <span>MODEL-BASED</span>
               <span>PROJECT OUTPUT</span>
               <span>TECHNICAL REVIEW</span>
-              <span>AISC ALIGNED</span>
+              <span>AISC / NISD ALIGNED</span>
             </div>
             <a className="button" href="#contact">
               Discuss this service <ArrowUpRight size={16} />
@@ -378,17 +392,43 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 04 / Capabilities (Digital Twin) */}
+      {/* 04 / Capabilities (Digital Twin & Engineering Drawings) */}
       <section className="twin section" id="capabilities">
         <aside>04 / CAPABILITIES</aside>
         <div>
-          <p className="eyebrow">DIGITAL TWIN THINKING</p>
+          <p className="eyebrow">DIGITAL TWIN &amp; DRAWING EXCELLENCE</p>
           <h2>
-            From drawing to
-            <br />
-            <em>digital twin.</em>
+            From contract drawing<br />
+            to <em>digital twin.</em>
           </h2>
-          <p>Structured information becomes a coordinated model, then a fabrication-ready set of outputs.</p>
+          <p>
+            Structured engineering information becomes a coordinated 3D model, then a fabrication-ready
+            set of outputs and verified shop drawings.
+          </p>
+
+          <div className="drawings-wrapper">
+            <div className="drawings-heading">
+              <p className="eyebrow" style={{ margin: 0 }}>SAMPLE ENGINEERING DELIVERABLES</p>
+            </div>
+            <div className="drawings-grid">
+              {sampleDrawings.map((drawing, i) => (
+                <div
+                  key={drawing.title}
+                  className="drawing-card"
+                  onClick={() =>
+                    openLightboxWithImages(
+                      sampleDrawings.map((d) => ({ src: d.image, alt: `${d.title} - ${d.subtitle}` })),
+                      i
+                    )
+                  }
+                >
+                  <img src={drawing.image} alt={drawing.title} />
+                  <h4>{drawing.title}</h4>
+                  <span>{drawing.subtitle}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         <TiltCard className="blueprint" maxTilt={5}>
@@ -404,49 +444,81 @@ export default function Home() {
         </TiltCard>
       </section>
 
-      {/* 05 / Why MV Designers */}
-      <section className="why" id="why-mv">
+      {/* 05 / Recent Completed Projects */}
+      <section className="projects" id="projects">
         <div className="section-heading">
-          <p className="eyebrow">05 / WHY MV DESIGNERS</p>
+          <p className="eyebrow">05 / RECENT COMPLETED PROJECTS</p>
           <h2>
-            Built on discipline.
-            <br />
-            <em>Driven by detail.</em>
+            Proven steelwork,<br />
+            <em>validated in the field.</em>
           </h2>
+          <p>
+            Recent structural steel detailing projects executed by MV DESGINS for fabricators and
+            contractors worldwide. Each project is detailed with complete fabrication accuracy and
+            AISC/NISD standards compliance. Click any project to inspect full high-definition details.
+          </p>
         </div>
-        <div className="feature-grid">
-          {[
-            ['01', 'Precision', 'Accurate and clear detailing.'],
-            ['02', 'Quality', 'A focused approach to deliverables.'],
-            ['03', 'Efficiency', 'Streamlined technical workflows.'],
-            ['04', 'Innovation', 'Modern detailing techniques.'],
-            ['05', 'Reliability', 'Consistent project-focused service.'],
-            ['06', 'Integrity', 'Professional, transparent relationships.'],
-          ].map((x) => (
-            <TiltCard as="article" key={x[1]} maxTilt={6} scale={1.02}>
-              <b>{x[0]}</b>
-              <h3>{x[1]}</h3>
-              <p>{x[2]}</p>
-              <span>+</span>
+
+        <div className="projects-grid">
+          {recentProjects.map((project, i) => (
+            <TiltCard key={project.title} className="project-card" maxTilt={3} scale={1.01}>
+              <div
+                className="project-image-stage"
+                onClick={() =>
+                  openLightboxWithImages(
+                    recentProjects.map((p) => ({ src: p.imageHd, alt: `${p.title} — ${p.category}` })),
+                    i
+                  )
+                }
+              >
+                <span className="project-category">{project.category}</span>
+                <img
+                  src={project.imageHd}
+                  alt={project.title}
+                  className="project-img-contain"
+                  loading="lazy"
+                />
+                <div className="project-zoom-btn">
+                  <Maximize2 size={12} />
+                  <span>View Full Detail</span>
+                </div>
+              </div>
+              <div className="project-info">
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+                <div className="project-highlights">
+                  {project.highlights.map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </div>
+                <div className="project-scope">
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <Check size={13} style={{ color: 'var(--cyan)' }} /> {project.scope}
+                  </span>
+                  <button
+                    type="button"
+                    className="text-link"
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      borderBottom: '1px solid var(--gold)',
+                      padding: '0 0 2px',
+                      fontSize: '10px',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() =>
+                      openLightboxWithImages(
+                        recentProjects.map((p) => ({ src: p.imageHd, alt: `${p.title} — ${p.category}` })),
+                        i
+                      )
+                    }
+                  >
+                    HD Lightbox <ArrowUpRight size={13} />
+                  </button>
+                </div>
+              </div>
             </TiltCard>
           ))}
-        </div>
-      </section>
-
-      {/* Quality Section */}
-      <section className="quality">
-        <div className="crosshair">⊹</div>
-        <p className="eyebrow">QUALITY CONTROL / VERIFIED CLARITY</p>
-        <h2>
-          Getting it right
-          <br />
-          <em>the first time.</em>
-        </h2>
-        <div>
-          <span>ACCURACY</span>
-          <span>CLARITY</span>
-          <span>CONSISTENCY</span>
-          <span>FABRICATION-READY</span>
         </div>
       </section>
 
@@ -471,7 +543,7 @@ export default function Home() {
                 className={galleryStyles.slide}
                 key={image.src}
                 aria-hidden={index !== galleryIndex}
-                onClick={() => setLightboxOpen(true)}
+                onClick={() => openLightboxWithImages(galleryImages, galleryIndex)}
                 style={{ cursor: 'zoom-in' }}
               >
                 <img src={image.src} alt={image.alt} />
@@ -516,8 +588,7 @@ export default function Home() {
         <div className="showcase-copy">
           <p className="eyebrow">06 / GALLERY</p>
           <h2>
-            Explore our work,
-            <br />
+            Explore our work,<br />
             <em>activities &amp; moments.</em>
           </h2>
           <p>
@@ -539,7 +610,7 @@ export default function Home() {
             <button
               type="button"
               className="text-link"
-              onClick={() => setLightboxOpen(true)}
+              onClick={() => openLightboxWithImages(galleryImages, galleryIndex)}
               style={{ background: 'none', border: '0', borderBottom: '1px solid var(--gold)', cursor: 'pointer' }}
             >
               <Maximize2 size={14} /> Open Fullscreen Lightbox
@@ -548,63 +619,114 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 07 / Why MV DESGINS */}
+      <section className="why" id="why-mv">
+        <div className="section-heading">
+          <p className="eyebrow">07 / WHY MV DESGINS</p>
+          <h2>
+            Built on discipline.<br />
+            <em>Driven by detail.</em>
+          </h2>
+          <p style={{ marginTop: '14px', color: 'var(--muted)', fontSize: '14px', lineHeight: '1.7' }}>
+            MV DESGINS is equipped with both an exceptional team of experienced detailers and the highest
+            standards of software technology to take on any structural steel detailing project.
+          </p>
+        </div>
+        <div className="feature-grid">
+          {[
+            ['01', 'Precision', 'Accurate and clear detailing within international codes (AISC, NISD).'],
+            ['02', 'Quality', 'Stringent quality processes in place to ensure each job is done right the first time.'],
+            ['03', 'Efficiency', 'Streamlined technical workflows and automated CNC/DSTV file extraction.'],
+            ['04', 'Innovation', 'Modern 3D modeling and digital twin techniques that remove drawing complexity.'],
+            ['05', 'Reliability', 'Consistent project-focused service, time-bound deliverables, and responsive communication.'],
+            ['06', 'Integrity', 'Professional, customer-centric relationships creating tangible value for clients.'],
+          ].map((x) => (
+            <TiltCard as="article" key={x[1]} maxTilt={6} scale={1.02}>
+              <b>{x[0]}</b>
+              <h3>{x[1]}</h3>
+              <p>{x[2]}</p>
+              <span>+</span>
+            </TiltCard>
+          ))}
+        </div>
+      </section>
+
+      {/* Quality Section */}
+      <section className="quality">
+        <div className="crosshair">⊹</div>
+        <p className="eyebrow">QUALITY CONTROL / VERIFIED CLARITY</p>
+        <h2>
+          Getting it right<br />
+          <em>the first time.</em>
+        </h2>
+        <div>
+          <span>ACCURACY</span>
+          <span>CLARITY</span>
+          <span>CONSISTENCY</span>
+          <span>FABRICATION-READY</span>
+          <span>AISC &amp; NISD COMPLIANT</span>
+        </div>
+      </section>
+
       {/* Global Collaboration */}
       <section className="global">
         <div>
           <p className="eyebrow">GLOBAL COLLABORATION</p>
           <h2>
-            Seamless support.
-            <br />
+            Seamless support.<br />
             <em>One connected team.</em>
           </h2>
           <p>
             Supporting global structural steel detailing requirements through coordinated India-based
-            engineering capabilities.
+            engineering capabilities and dual-timezone coverage.
           </p>
+          <div style={{ marginTop: '20px', display: 'grid', gap: '8px', font: '11px var(--mono)', color: 'var(--muted)' }}>
+            <div><span style={{ color: 'var(--gold)' }}>INDIA CELL:</span> {company.contact.phoneIndia}</div>
+            <div><span style={{ color: 'var(--cyan)' }}>USA CELL:</span> {company.contact.phoneUSA}</div>
+          </div>
         </div>
 
         <div className="world">
           <span className="us">
             US
             <br />
-            <b>Eastern Time</b>
+            <b>Eastern Time (Cell: {company.contact.phoneUSA})</b>
             <strong>{clocks.us}</strong>
           </span>
           <i />
           <span className="india">
             INDIA
             <br />
-            <b>India Standard Time</b>
+            <b>IST (Cell: {company.contact.phoneIndia})</b>
             <strong>{clocks.india}</strong>
           </span>
           <small>● GLOBAL SUPPORT AVAILABLE</small>
         </div>
       </section>
 
-      {/* 07 / Contact Section */}
+      {/* 08 / Contact Section */}
       <section className="contact contact-direct" id="contact">
-        <aside>07 / CONTACT</aside>
+        <aside>08 / CONTACT</aside>
         <div style={{ textAlign: 'center', justifySelf: 'center' }}>
           <p className="eyebrow" style={{ justifyContent: 'center' }}>
             START A CONVERSATION
           </p>
           <h2>
-            Let’s detail your
-            <br />
+            Let’s detail your<br />
             <em>next project.</em>
           </h2>
           <p style={{ marginInline: 'auto' }}>
-            Have a structural steel project in development? Connect directly with the MV Designers team to
+            Have a structural steel project in development? Connect directly with the MV DESGINS team to
             discuss your detailing requirements.
           </p>
         </div>
 
         <TiltCard className="connect-panel" maxTilt={4}>
           <Mail size={28} />
-          <span>PROJECT ENQUIRIES</span>
+          <span>PROJECT ENQUIRIES — {company.tagline.toUpperCase()}</span>
 
           <div className="connect-email-row">
-            <a href={`mailto:${company.contact.email}?subject=MV%20Designers%20Project%20Enquiry`}>
+            <a href={`mailto:${company.contact.email}?subject=MV%20DESGINS%20Project%20Enquiry`}>
               {company.contact.email}
             </a>
             <button
@@ -618,29 +740,48 @@ export default function Home() {
             </button>
           </div>
 
+          <div style={{ display: 'grid', gap: '10px', fontSize: '13px', margin: '4px 0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Phone size={15} style={{ color: 'var(--gold)' }} />
+              <span>
+                India: <a href={`tel:${company.contact.phoneIndia.replace(/\s/g, '')}`} style={{ color: 'var(--ink)', fontWeight: 600 }}>{company.contact.phoneIndia}</a>
+                {' | '}
+                USA: <a href={`tel:${company.contact.phoneUSA.replace(/[-\s]/g, '')}`} style={{ color: 'var(--ink)', fontWeight: 600 }}>{company.contact.phoneUSA}</a>
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+              <MapPin size={15} style={{ color: 'var(--cyan)', marginTop: '3px', flexShrink: 0 }} />
+              <span style={{ color: 'var(--muted)', fontSize: '12px', lineHeight: '1.5' }}>
+                {company.contact.address.formatted}
+              </span>
+            </div>
+          </div>
+
           <p>Opens your default email app—Gmail, Outlook, Apple Mail, or another configured mail client.</p>
 
           <a
             className="button"
-            href={`mailto:${company.contact.email}?subject=MV%20Designers%20Project%20Enquiry`}
+            href={`mailto:${company.contact.email}?subject=MV%20DESGINS%20Project%20Enquiry`}
           >
             Connect with us <Send size={16} />
           </a>
 
           <small>
-            <ShieldCheck size={13} /> Private project details should be shared only through a confirmed company email.
+            <ShieldCheck size={13} /> Official company inbox: {company.contact.email} • Web: {company.contact.web}
           </small>
         </TiltCard>
       </section>
 
       {/* Final CTA */}
       <section className="final">
-        <p className="eyebrow">MV DESIGNERS / STRUCTURAL DETAILING</p>
+        <p className="eyebrow">MV DESGINS / STRUCTURAL DETAILING</p>
         <h2>
-          Precision starts with the right
-          <br />
+          Precision starts with the right<br />
           <em>detailing partner.</em>
         </h2>
+        <p style={{ color: 'var(--muted)', marginBottom: '24px' }}>
+          {company.tagline} — High-quality detailing for steel fabricators, engineers, and construction professionals.
+        </p>
         <a className="button" href="#contact">
           Request a Quote <ArrowUpRight size={17} />
         </a>
@@ -648,30 +789,45 @@ export default function Home() {
 
       {/* Footer */}
       <footer>
-        <a className="brand" href="#home">
-          <small>STRUCTURAL</small>
-          MV DESIGNERS
-        </a>
-        <p>{company.tagline}</p>
+        <div className="brand-wrap">
+          <img
+            src="/assets/mv-desgins-logo.png"
+            alt="MV DESGINS"
+            style={{ height: '52px', width: 'auto', objectFit: 'contain' }}
+          />
+        </div>
+        <div>
+          <p style={{ margin: '0 0 10px', fontWeight: 700, color: 'var(--ink)' }}>
+            {company.name} — {company.tagline}
+          </p>
+          <p style={{ margin: 0, fontSize: '12px', color: 'var(--muted)', lineHeight: '1.6' }}>
+            {company.contact.address.formatted}
+            <br />
+            India: {company.contact.phoneIndia} | USA: {company.contact.phoneUSA}
+            <br />
+            Email: {company.contact.email} | Web: {company.contact.web}
+          </p>
+        </div>
         <div>
           <a href="#about">About</a>
           <a href="#services">Services</a>
-          <a href="/contact">Direct Form</a>
+          <a href="#projects">Projects</a>
+          <a href="/contact">Contact Page</a>
           <a href="/privacy">Privacy</a>
         </div>
         <small>
           STRUCTURAL DETAILING • DIGITAL PRECISION • GLOBAL COLLABORATION
-          <br />© {new Date().getFullYear()} MV Designers. All Rights Reserved.
+          <br />© {new Date().getFullYear()} MV DESGINS. All Rights Reserved. AISC &amp; NISD Standards Compliant.
         </small>
       </footer>
 
-      {/* Gallery Lightbox Modal */}
+      {/* Gallery & Project Lightbox Modal */}
       <GalleryLightbox
-        images={galleryImages}
-        currentIndex={galleryIndex}
+        images={lightboxImages}
+        currentIndex={lightboxIndex}
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
-        onSelect={(idx) => setGalleryIndex(idx)}
+        onSelect={(idx) => setLightboxIndex(idx)}
       />
 
       {/* MV Assistant Chatbot */}

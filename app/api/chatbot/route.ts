@@ -10,64 +10,64 @@ interface KnowledgeEntry {
 const knowledgeBase: KnowledgeEntry[] = [
   {
     patterns: /\b(hi|hello|hey|greetings|morning|evening|afternoon)\b/i,
-    reply: `Hello! Welcome to MV Designers. We specialize in high-precision structural steel detailing, 3D modeling, and fabrication deliverables for fabricators and engineers worldwide. How can we assist your project today?`,
-    suggestions: ['Our Services', 'Request a Quote', 'Software & Formats', 'Our Process'],
+    reply: `Hello! Welcome to MV Designers — "${company.tagline}". We specialize in high-precision structural steel detailing, 3D modeling, shop drawings, erection plans, and CNC/DSTV fabrication deliverables for fabricators and engineers worldwide. How can we assist with your project today?`,
+    suggestions: ['Our Services', 'Recent Projects', 'Request a Quote', 'Contact Details'],
   },
   {
     patterns: /\b(service|services|capabilities|offer|what do you do|specialt)\b/i,
-    reply: `MV Designers provides comprehensive structural steel detailing solutions, including:\n\n• 3D Structural Modeling (BIM/CAD)\n• 2D Shop Drawings & Gather Sheets\n• 2D Erection Drawings & Anchor Bolt Plans\n• CNC, DXF & DSTV Production Data\n• Advanced Bill of Materials (ABOM)\n• KISS & EJE Structural Management Files\n• Field Bolt & Material Cut Summaries\n• As-Built Drawing Updates`,
-    suggestions: ['3D Modeling details', 'CNC & DSTV outputs', 'Request a Quote', 'Engineering Workflow'],
+    reply: `MV Designers provides full-lifecycle structural steel detailing solutions:\n\n• 3D Modeling (BIM, beams, columns, bracing, stairs, handrails, ladders)\n• 2D Erection Drawings & Anchor Bolt Layouts\n• 2D Shop Drawings & Gather Sheets\n• Advanced Bill of Materials (ABOM) for procurement\n• CNC, DXF & DSTV Production Files for automated machine tools\n• KISS Files (electronic specification & labor data)\n• EJE Files (Structural Material Manager integration)\n• Material Summaries with cut lengths\n• Field Bolt Summaries for site erection\n• As-Built Drawings incorporating field modifications.`,
+    suggestions: ['3D Modeling details', 'Recent Projects', 'CNC & DSTV files', 'Request a Quote'],
+  },
+  {
+    patterns: /\b(project|projects|portfolio|work|canopy|industrial|facility|completed)\b/i,
+    reply: `Our recent completed projects include:\n\n1. Canopy & Curved Roof Structural Framing (Complex radial steel trusses & tubular core framing)\n2. Multi-Tier Industrial Steel Building (Heavy steel framing with crane beams & bracing)\n3. Commercial Facility & Warehouse (Long-span open-web joists & roof trusses)\n4. Curved Tubular Arch Portal Structure (High-clearance tubular portal frame)\n\nYou can explore these in the "Recent Projects" section on our website.`,
+    suggestions: ['Our Services', 'Request a Quote', 'Software & Standards'],
   },
   {
     patterns: /\b(quote|quotation|cost|estimate|pricing|proposal|rates|hire|bid)\b/i,
-    reply: `To receive a project quotation:\n\n1. Prepare your architectural/structural contract drawings (.PDF, .DWG, or 3D models).\n2. Specify project scope, estimated tonnage, and schedule milestones.\n3. Send your enquiry to ${company.contact.email} or click "Request a Quote" to open a pre-formatted email template.\n\nOur engineering team will review the scope and provide a comprehensive proposal.`,
-    suggestions: ['Contact email', 'Supported file formats', 'Turnaround time', 'Our Services'],
+    reply: `To receive a customized project quotation:\n\n1. Prepare your architectural and structural contract drawings (.PDF, .DWG, or 3D models).\n2. Specify project scope, estimated tonnage, and turnaround milestones.\n3. Email your drawings directly to ${company.contact.email} or call +91 9916502444 / USA: 585-364-6538.\n\nOur engineering team will review the scope and provide a comprehensive proposal.`,
+    suggestions: ['Contact email & phone', 'Supported file formats', 'Our Process', 'Recent Projects'],
   },
   {
-    patterns: /\b(process|workflow|pipeline|steps|how it works|how do you work)\b/i,
-    reply: `Our disciplined 7-step engineering workflow ensures zero-defect detailing:\n\n1. Contract Drawings & Spec Review\n2. 3D Model Generation & Connection Setup\n3. Coordination & Quality Control Review\n4. Fabrication Shop Drawings\n5. Erection & Installation Drawings\n6. CNC / DSTV / NC Data Export\n7. Fabrication & Field Support (As-Built)`,
-    suggestions: ['3D Modeling details', 'Quality control standards', 'Request a Quote'],
+    patterns: /\b(process|workflow|pipeline|steps|how it works)\b/i,
+    reply: `Our disciplined 7-step engineering workflow ensures fabrication-ready accuracy:\n\n1. Contract drawings review & RFI coordination\n2. 3D structural modeling of steel members & connections\n3. Quality control review & engineering checking\n4. Fabrication shop drawings & gather sheets\n5. Erection plans & anchor bolt layouts\n6. CNC, DSTV & DXF NC data extraction\n7. Fabrication support & As-Built drawing updates.`,
+    suggestions: ['Quality standards', 'Recent Projects', 'Request a Quote'],
   },
   {
     patterns: /\b(software|tools|tekla|revit|autocad|navisworks|sds|bim)\b/i,
-    reply: `We leverage industry-leading structural engineering platforms, including:\n\n• Tekla Structures for complex 3D BIM detailing\n• Autodesk Revit for multidisciplinary coordination\n• AutoCAD for 2D drafting and contract overlays\n• Navisworks for clash detection and digital twin validation\n• SDS/2 and specialized NC extraction tools.`,
+    reply: `MVD is equipped with both an exceptional team of experienced detailers and the highest standards of software technology. We produce quality shop drawings within the framework of international codes (AISC, NISD), specifications, and contract documents using modern 3D modeling and detailing platforms.`,
     suggestions: ['File formats delivered', 'Our Services', 'Request a Quote'],
   },
   {
     patterns: /\b(format|formats|files|dstv|dxf|cnc|kiss|eje|nc1|drawing)\b/i,
-    reply: `We deliver production-ready electronic files for seamless fabrication:\n\n• CNC / NC1 / DSTV files for automated beam lines & drill lines\n• DXF files for plate burning & plasma cutting\n• KISS & EJE data for MRP / ERP fabricator management\n• PDF & DWG erection and shop drawings\n• 3D IFC models for BIM coordination.`,
-    suggestions: ['Our Services', 'Request a Quote', 'Our Process'],
+    reply: `We deliver production-oriented electronic data:\n\n• CNC / DSTV files converting length, hole positions, bevels, notches into machine coordinates\n• DXF files for automated plate cutting\n• KISS format files to eliminate repetitive data entry\n• EJE files for Structural Material Manager software\n• PDF & DWG fabrication shop drawings & erection sheets.`,
+    suggestions: ['Our Services', 'Request a Quote', 'Recent Projects'],
   },
   {
     patterns: /\b(standard|standards|code|codes|aisc|nisd|cisc|osha|quality|accuracy)\b/i,
-    reply: `MV Designers adheres strictly to international detailing and structural safety standards:\n\n• AISC (American Institute of Steel Construction)\n• NISD (National Institute of Steel Detailing)\n• CISC (Canadian Institute of Steel Construction)\n• OSHA safety requirements for erection and fall protection.`,
-    suggestions: ['Our Services', 'Request a Quote', 'Company Background'],
+    reply: `MV Designers strength lies in steel detailing knowledge, experience, and skilled manpower with strict exposure to international standards (AISC, NISD). Our strong quality policy is geared toward global standards with a team of Structural Engineers, modelers, and checkers led by industry veterans.`,
+    suggestions: ['Our Services', 'Recent Projects', 'Request a Quote'],
   },
   {
     patterns: /\b(time|hours|timezone|time zone|us|india|turnaround|timeline|schedule|available)\b/i,
-    reply: `We operate with dual-timezone global coordination between US Eastern Time (EST/EDT) and India Standard Time (IST). This provides seamless daily project handovers, accelerated turnarounds, and responsive support across global working hours.`,
-    suggestions: ['Request a Quote', 'Contact Details', 'Our Process'],
+    reply: `We operate with dual-timezone global coordination between US Eastern Time and India Standard Time (IST). Our US Cell is 585-364-6538 and India Cell is +91 9916502444. This ensures round-the-clock availability, prompt communication, and accelerated turnarounds.`,
+    suggestions: ['Contact Details', 'Request a Quote', 'Our Services'],
   },
   {
-    patterns: /\b(contact|email|reach|phone|location|address|office)\b/i,
-    reply: `You can connect directly with the MV Designers engineering team at:\n\n• Email: ${company.contact.email}\n• Enquiries: Click "Request a Quote" or use the contact panel to open a pre-composed message with project scope details.\n• Verified telephone and office location details are provided upon initial project consultation.`,
-    suggestions: ['Request a Quote', 'Our Services', 'Working hours'],
+    patterns: /\b(contact|email|reach|phone|cell|location|address|office|dharwad|karnataka)\b/i,
+    reply: `You can reach the MV Designers team at:\n\n• Email: ${company.contact.email}\n• Web: ${company.contact.web}\n• India Cell: ${company.contact.phoneIndia}\n• USA Cell: ${company.contact.phoneUSA}\n• Office: ${company.contact.address.formatted}`,
+    suggestions: ['Request a Quote', 'Our Services', 'Recent Projects'],
   },
   {
     patterns: /\b(about|who are you|company|mv designers|mission|vision|values)\b/i,
-    reply: `${company.description}\n\nOur Vision: ${company.vision}\nCore Values: ${company.values.join(', ')}.\nTagline: "${company.tagline}"`,
-    suggestions: ['Our Services', 'Our Process', 'Request a Quote', 'Contact Details'],
-  },
-  {
-    patterns: /\b(model|3d|twin|digital twin)\b/i,
-    reply: `Our 3D Modeling service builds comprehensive digital twins directly from contract drawings. We model structural columns, beams, bracing, miscellaneous steel (stairs, handrails, ladders), and clash-checked connection details before a single piece of steel is cut.`,
-    suggestions: ['Shop Drawings', 'CNC & DSTV files', 'Request a Quote'],
+    reply: `${company.description}\n\n${company.extendedAbout}\n\nCore Values: ${company.values.join(', ')}.\nTagline: "${company.tagline}"`,
+    suggestions: ['Our Services', 'Recent Projects', 'Contact Details', 'Request a Quote'],
   },
 ];
 
 const fallbackEntry = {
-  reply: `Thank you for your enquiry. MV Designers specializes in structural steel detailing, 3D modeling, shop drawings, erection drawings, and CNC data. \n\nFor project-specific scopes, drawings reviews, or technical questions, please email us directly at ${company.contact.email} or select one of the topics below:`,
-  suggestions: ['Our Services', 'Request a Quote', 'Software & Standards', 'Working Hours', 'Contact Details'],
+  reply: `Thank you for your interest in MV Designers ("${company.tagline}"). We provide structural steel detailing, 3D modeling, shop drawings, erection drawings, and CNC data adhering to AISC & NISD standards.\n\nFor immediate assistance, please email ${company.contact.email} or call +91 9916502444 / USA: 585-364-6538.`,
+  suggestions: ['Our Services', 'Recent Projects', 'Request a Quote', 'Contact Details'],
 };
 
 export async function POST(request: Request) {
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
       });
     }
 
-    const matched = knowledgeBase.find(entry => entry.patterns.test(topic));
+    const matched = knowledgeBase.find((entry) => entry.patterns.test(topic));
 
     if (matched) {
       return NextResponse.json({
@@ -100,8 +100,8 @@ export async function POST(request: Request) {
     });
   } catch {
     return NextResponse.json({
-      reply: `Unable to process the request right now. Please email ${company.contact.email} for immediate project assistance.`,
-      message: `Unable to process the request right now. Please email ${company.contact.email} for immediate project assistance.`,
+      reply: `Unable to process the request right now. Please email ${company.contact.email} or call +91 9916502444 for project assistance.`,
+      message: `Unable to process the request right now. Please email ${company.contact.email} or call +91 9916502444 for project assistance.`,
       suggestions: ['Our Services', 'Request a Quote', 'Contact Details'],
     });
   }
